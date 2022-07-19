@@ -7,5 +7,14 @@
 <body>
 <h1>Edit</h1>
 <p>{{ file_name }}</p>
+<br>
+<form method="post">
+
+<textarea name="text" rows="37" style="width: 100%; resize: none;overflow: hidden">
+{% for i in range(text|length) %}{{ text[i] }}{% endfor %}
+</textarea>
+<button type="submit">Save</button>
+</form>
+
 </body>
 </html>
