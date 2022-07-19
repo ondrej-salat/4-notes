@@ -8,7 +8,6 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
-import sqlite3
 import secrets
 
 app = Flask(__name__)
@@ -29,12 +28,6 @@ flow = Flow.from_client_secrets_file(
     scopes=["openid", "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile"],
     redirect_uri="http://127.0.0.1:5000/callback")
-
-
-def is_logged_in():
-    if len(session) == 0:
-        return True
-    return False
 
 
 @app.route("/login")
