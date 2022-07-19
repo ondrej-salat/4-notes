@@ -65,6 +65,7 @@ def edit_file(file_name):
         return redirect('/')
     if request.method == 'POST':
         text = request.form.get('text')
+        print(text)
         write_txt(file_name, text)
     return render_template("edit.html", file_name=file_name, text=read_txt(file_name))
 

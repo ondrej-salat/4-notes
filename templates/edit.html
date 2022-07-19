@@ -9,12 +9,22 @@
 <p>{{ file_name }}</p>
 <br>
 <form method="post">
-
-<textarea name="text" rows="37" style="width: 100%; resize: none;overflow: hidden">
-{% for i in range(text|length) %}{{ text[i] }}{% endfor %}
-</textarea>
-<button type="submit">Save</button>
+    <textarea name="text" id="area" hidden></textarea>
+    <p class="textarea" id="text" contenteditable="true">
+        {% for i in range(text|length) %}
+            {{ text[i] }}
+            <br>
+        {% endfor %}
+    </p>
+    <script>
+        function setValue() {
+            const text = document.getElementById('text').innerText;
+            document.getElementById('area').value = text;
+        }
+    </script>
+    <button onclick="setValue()" type="submit">Save</button>
 </form>
+
 
 </body>
 </html>
