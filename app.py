@@ -64,5 +64,10 @@ def logout():
     return redirect("/")
 
 
+@app.route('/about')
+def about():
+    return 'about'
+
+
 if __name__ == '__main__':
     app.run()

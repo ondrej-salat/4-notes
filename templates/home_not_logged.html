@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<script>
+<script defer>
     function redirect(){
-        window.location.href = 'http://127.0.0.1:5000/login'
+        location.href = '/login'
     }
 </script>
 <body>
+
+{% include 'nav.html' %}
 <h1>You are not logged in, please log in to see more</h1>
 <button onclick="redirect()">Login</button>
 

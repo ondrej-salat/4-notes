@@ -1,0 +1,28 @@
+body {
+    background-color: aquamarine;
+    align-content: center;
+    font-family: "Product Sans", Arial, sans-serif;
+}
+
+.textarea {
+    text-indent: 20px;
+    width: 30%;
+    min-width: 35em;
+    max-width: 35em;
+    min-height: 50em;
+    max-height: 50em;
+    background-color: white;
+    border-left: 2em solid white;
+    border-right: 2em solid white;
+    border-bottom: 3em solid white;
+    border-top: 3em solid white;
+    text-align: left;
+}
+
+.title {
+    align-self: center;
+}
+
+.textarea:focus {
+    outline: none;
+}

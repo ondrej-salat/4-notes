@@ -137,3 +137,6 @@ data.db
 # Secrets
 client_id.txt
 client_secret.json
+
+# Files
+files/*

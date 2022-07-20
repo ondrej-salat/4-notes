@@ -15,7 +15,7 @@ def insert_user(user_id, email, name):
 
 
 def user_notes(user_id):
-    user_files = [0, 0, 0]
+    user_files = []
     con = sqlite3.connect('data.db')
     cur = con.cursor()
     cur.execute(f'SELECT FILE_NAME, CREATED, SUBJECT FROM notes where USER_ID=?', (user_id,))

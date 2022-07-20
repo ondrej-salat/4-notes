@@ -3,28 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
 </head>
+<script defer>
+    function setValue() {
+        const text = document.getElementById('text').innerText;
+        document.getElementById('area').value = text;
+    }
+
+    function printDiv() {
+        var print_div = document.getElementById("text").innerHTML;
+        var print_area = window.open();
+        print_area.document.write(print_div);
+        print_area.document.close();
+        print_area.print();
+        //print_area.close();
+
+    }
+</script>
 <body>
-<h1>Edit</h1>
-<p>{{ file_name }}</p>
-<br>
-<form method="post">
-    <textarea name="text" id="area" hidden></textarea>
-    <p class="textarea" id="text" contenteditable="true">
-        {% for i in range(text|length) %}
-            {{ text[i] }}
-            <br>
-        {% endfor %}
-    </p>
-    <script>
-        function setValue() {
-            const text = document.getElementById('text').innerText;
-            document.getElementById('area').value = text;
-        }
-    </script>
-    <button onclick="setValue()" type="submit">Save</button>
-</form>
 
+{% include 'nav.html' %}
 
+<div align="center">
+    <h1>Edit</h1>
+    <p>{{ file_name }}</p>
+    <button onclick="printDiv()">Print</button>
+
+    <form id="form" method="post">
+        <button onclick="setValue()" type="submit">Save</button>
+        <textarea id="area" name="text" hidden></textarea>
+        <div id="text" class="textarea" autofocus contenteditable="true">
+            {% for i in range(text|length) %}
+                {% if text[i][0] == '#' %}
+                    <h3 class="title">{{ text[i] }}</h3>
+                {% else %}
+                    <p>{{ text[i] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+    </form>
+</div>
 </body>
 </html>
