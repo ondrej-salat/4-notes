@@ -22,7 +22,7 @@ def user_notes(user_id):
     f = cur.fetchall()
     for i in range(0, len(f)):
         user_files.append(f[i])
-    return user_files
+    return list(reversed(user_files))
 
 
 def convert_to_id(email):
@@ -53,5 +53,9 @@ def home():
     user_id = convert_to_id(session['email'])
     if not is_in_db(user_id):
         insert_user(user_id, session['email'], session['name'])
-
+    args = request.args
+    newer_posts = bool(args.get('new'))
+    subject_filter = args.get('subjects')
+    print(newer_posts)
+    print(subject_filter)
     return render_template("home_logged.html", email=session["email"], name=session["name"], notes=user_notes(user_id))

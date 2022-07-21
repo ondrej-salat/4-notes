@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='paper-logo.svg') }}">
+
 </head>
 <script defer>
     function div_show() {
@@ -30,13 +32,12 @@
     <h1>Home</h1>
     <button onclick="div_show()">New note</button>
     {% for i in range(0,notes|length) %}
-        <div id="{{ notes[i][0] }}" onclick="location.href = '/edit/{{ notes[i][0] }}';" class="box">
-            <h3>
-                {{ notes[i][0] }} {{ notes[i][1] }} {{ notes[i][2] }}
-            </h3>
-
+        <div class="box" id="{{ notes[i][0] }}" onclick="location.href = '/edit/{{ notes[i][0] }}';">
+            <img class="subject-logo" src="{{ url_for('static', filename='subjects/'+notes[i][2]+'.svg') }}"/>
+            <h3 class="file-name">{{ notes[i][0] }}</h3>
+            <p class="time">{{ notes[i][1] }}</p>
         </div>
-        <br>
+
     {% endfor %}
 
     <div id="popup">
@@ -45,15 +46,15 @@
             <input required id="filename">
             <h2>Select subject</h2>
             <select required name="subject" id="subject">
-                <option value="Other">Other</option>
-                <option value="CJ">CJ</option>
-                <option value="M">M</option>
-                <option value="BI">BI</option>
-                <option value="Z">Z</option>
-                <option value="CH">CH</option>
-                <option value="FY">FY</option>
-                <option value="D">D</option>
-                <option value="ZSV">ZSV</option>
+                <option value="other">Other</option>
+                <option value="cj">CJ</option>
+                <option value="m">M</option>
+                <option value="bi">BI</option>
+                <option value="z">Z</option>
+                <option value="ch">CH</option>
+                <option value="fy">FY</option>
+                <option value="d">D</option>
+                <option value="zsv">ZSV</option>
             </select>
             <br>
             <button onclick="div_hide()">Cancel</button>

@@ -11,7 +11,7 @@ def create_file(subject, filename):
     con = sqlite3.connect('data.db')
     cur = con.cursor()
     cur.execute(f'INSERT INTO notes (USER_ID, USER, FILE_NAME, CREATED, SUBJECT) VALUES (?, ?, ?, ?, ?)',
-                (convert_to_id(session['email']), session['name'], f'{filename}.txt', datetime.now(), subject))
+                (convert_to_id(session['email']), session['name'], filename, datetime.now(), subject))
     con.commit()
     con.close()
 
@@ -63,9 +63,9 @@ def edit_file(file_name):
         flash('file doesnt exist')
         print('file doesnt exist')
         return redirect('/')
+    file_name += '.txt'
     if request.method == 'POST':
         text = request.form.get('text')
-        print(text)
         write_txt(file_name, text)
     return render_template("edit.html", file_name=file_name, text=read_txt(file_name))
 
@@ -79,10 +79,9 @@ def new_file():
     args = request.args
     subject = args.get('subject')
     file_name = args.get('filename')
-    print(f'{subject} \n {file_name}')
     if is_in_db(file_name):
         flash('file name already exists')
         print('file name already exists')
         return redirect('/')
     create_file(subject, file_name)
-    return redirect(f'/edit/{file_name}.txt')
+    return redirect(f'/edit/{file_name}')
