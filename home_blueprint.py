@@ -69,6 +69,7 @@ def is_in_db(item):
 @login_blueprint.route('/home', methods=['POST', 'GET'])
 def home():
     if len(session) == 0:
+        session.clear()
         return render_template("home_not_logged.html")
     user_id = convert_to_id(session['email'])
     if not is_in_db(user_id):

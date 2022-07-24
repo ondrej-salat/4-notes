@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>4-notes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='paper-logo.svg') }}">
 
@@ -19,8 +19,15 @@
     }
 
     function newFile() {
-        filename = document.getElementById('filename').value;
-        subject = document.getElementById('subject').value;
+        let filename = document.getElementById('filename').value;
+        let subject = document.getElementById('subject').value;
+        let subjects = new Set(['cj', 'm', 'bi', 'z', 'ch', 'fy', 'd', 'zsv', 'other']);
+        if (filename.length > 15) {
+            filename = filename.slice(15);
+        }
+        if (!subjects.has(subject)) {
+            subject = 'other';
+        }
         location.href = '/edit/new?subject=' + subject + '&filename=' + filename;
     }
 </script>
@@ -31,19 +38,22 @@
 <div align="center">
     <h1>Home</h1>
     <button onclick="div_show()">New note</button>
-    {% for i in range(0,notes|length) %}
-        <div class="box" id="{{ notes[i][0] }}" onclick="location.href = '/edit/{{ notes[i][0] }}';">
-            <img class="subject-logo" src="{{ url_for('static', filename='subjects/'+notes[i][2]+'.svg') }}"/>
-            <h3 class="file-name">{{ notes[i][0] }}</h3>
-            <p class="time">{{ notes[i][1] }}</p>
-        </div>
+    <div class="grid-container">
+        {% for i in range(0,notes|length) %}
+            <div class="box" id="{{ notes[i][0] }}" onclick="location.href = '/edit/{{ notes[i][0] }}';">
+                <img class="subject-logo" src="{{ url_for('static', filename='subjects/'+notes[i][2]+'.svg') }}"/>
+                <h3 class="file-name">{{ notes[i][0] }}</h3>
+                <p class="time">{{ notes[i][1] }}</p>
+            </div>
 
-    {% endfor %}
+        {% endfor %}
+    </div>
+
 
     <div id="popup">
         <div id="popupContent">
             <h2>Create file name</h2>
-            <input required id="filename">
+            <input maxlength="15" required id="filename">
             <h2>Select subject</h2>
             <select required name="subject" id="subject">
                 <option value="other">Other</option>

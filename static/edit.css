@@ -1,6 +1,5 @@
 body {
     background-color: aquamarine;
-    align-content: center;
     font-family: "Product Sans", Arial, sans-serif;
 }
 
@@ -24,6 +23,10 @@ body {
 
 .textarea:focus {
     outline: none;
+}
+
+#logo {
+    width: 4em;
 }
 
 

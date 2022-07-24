@@ -2,10 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit</title>
+    <title>{{ file_name }} 4-notes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='paper-logo.svg') }}">
 </head>
 <script defer>
+    function goHome() {
+        setValue();
+        console.log("set")
+        document.getElementById('form').submit();
+        console.log('submit')
+        window.location = '/';
+    }
+
     function setValue() {
         const text = document.getElementById('text').innerText;
         document.getElementById('area').value = text;
@@ -35,8 +44,20 @@
 </script>
 <body>
 
-{% include 'nav.html' %}
+<div class="top-nav" id="top-nav">
+    <img onclick="goHome();" id="logo"
+         src="{{ url_for('static', filename='paper-logo.svg') }}"/><strong>4-notes </strong>
+    <a href="/logout">Logout</a>
+    <a id="about" href="/about">About</a>
+</div>
 
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 <div align="center">
     <h1>Edit</h1>
     <p>{{ file_name }}</p>

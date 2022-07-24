@@ -11,19 +11,20 @@ def create_file(subject, filename):
     con = sqlite3.connect('data.db')
     cur = con.cursor()
     cur.execute(f'INSERT INTO notes (USER_ID, USER, FILE_NAME, CREATED, SUBJECT) VALUES (?, ?, ?, ?, ?)',
-                (convert_to_id(session['email']), session['name'], filename, datetime.now(), subject))
+                (convert_to_id(session['email']), session['name'], filename,
+                 datetime.now().strftime('%d.%m. %Y %H:%M:%S'), subject))
     con.commit()
     con.close()
 
 
 def read_txt(filename):
-    with open(f'files/{filename}') as f:
+    with open(f'files/{filename}.txt') as f:
         text = f.readlines()
     return text
 
 
 def write_txt(filename, text):
-    f = open(f"files/{filename}", "w")
+    f = open(f"files/{filename}.txt", "w")
     f.write(text)
     f.close()
 
@@ -56,14 +57,11 @@ def edit():
 @edit_blueprint.route('/<file_name>', methods=['POST', 'GET'])
 def edit_file(file_name):
     if len(session) == 0:
-        flash('not logged in')
         print('not logged in')
         return redirect('/')
     if not is_in_db(file_name):
-        flash('file doesnt exist')
         print('file doesnt exist')
         return redirect('/')
-    file_name += '.txt'
     if request.method == 'POST':
         text = request.form.get('text')
         write_txt(file_name, text)
@@ -73,14 +71,12 @@ def edit_file(file_name):
 @edit_blueprint.route('/new/', methods=['POST', 'GET'])
 def new_file():
     if len(session) == 0:
-        flash('not logged in')
         print('not logged in')
         return redirect('/')
     args = request.args
     subject = args.get('subject')
     file_name = args.get('filename')
     if is_in_db(file_name):
-        flash('file name already exists')
         print('file name already exists')
         return redirect('/')
     create_file(subject, file_name)
