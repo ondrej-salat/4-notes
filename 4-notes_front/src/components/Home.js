@@ -1,4 +1,6 @@
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import {useEffect} from "react";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -8,6 +10,16 @@ export default function Profile() {
         navigate("/");
         console.log('yes sir')
     };
+
+    const getItem = async () => {
+        axios.get('/notes', {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},).then(async function (response) {
+            console.log(response)
+        })
+    }
+
+    useEffect(() => {
+        getItem()
+    })
 
     return (
         <>

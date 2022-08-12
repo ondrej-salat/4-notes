@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 import jwt
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
@@ -36,6 +36,22 @@ class LoginItem(BaseModel):
     password: str
 
 
+class TokenItem(BaseModel):
+    token: str
+
+
+def get_token(req):
+    token = req.headers["Authorization"].split()[1]
+    return token
+
+
+def authorize_token(token):
+    data = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    if data['username'] == test_user['username'] and data['password'] == test_user["password"]:
+        return True
+    return False
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -51,6 +67,9 @@ async def user_login(loginitem: LoginItem):
         return {"message": "login failed"}
 
 
-@app.get("/edit/{filename}")
-async def say_hello(filename: str):
-    return {"message": f"Hello {filename}"}
+@app.get("/notes")
+async def notes(req: Request):
+    token = get_token(req)
+    if authorize_token(token):
+        return {"message": f"Hello {jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
+    return HTTPException(status_code=401, detail='user is not authorized')
