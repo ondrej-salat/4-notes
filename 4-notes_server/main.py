@@ -65,5 +65,5 @@ async def user_login(login_item: LoginItem):
 async def notes(req: Request):
     token = get_token(req)
     if authorize_token(token):
-        return {"message": f"Hello {jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
+        return {"message": f"{jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
     return HTTPException(status_code=401, detail='user is not authorized')
