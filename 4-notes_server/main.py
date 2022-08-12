@@ -3,8 +3,6 @@ import jwt
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from google.oauth2 import id_token
-from google.auth.transport import requests
 
 SECRET_KEY = "YOUR_FAST_API_SECRET_KEY"
 ALGORITHM = "HS256"
@@ -67,5 +65,5 @@ async def user_login(login_item: LoginItem):
 async def notes(req: Request):
     token = get_token(req)
     if authorize_token(token):
-        return {"message": f"Hello {jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
+        return {"message": f"{jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
     return HTTPException(status_code=401, detail='user is not authorized')

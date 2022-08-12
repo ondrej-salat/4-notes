@@ -1,9 +1,10 @@
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export default function Profile() {
     const navigate = useNavigate();
+    let [username, setUsername] = useState('');
 
     const signOut = () => {
         localStorage.removeItem("token");
@@ -13,7 +14,8 @@ export default function Profile() {
 
     const getItem = async () => {
         axios.get('/notes', {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},).then(async function (response) {
-            console.log(response)
+            setUsername(response['data']['message'])
+            console.log(username)
         })
     }
 
@@ -25,7 +27,7 @@ export default function Profile() {
         <>
             <div style={{marginTop: 20, minHeight: 700}}>
                 <h1>Profile page</h1>
-                <p>Hello there, welcome to your profile page</p>
+                <p>Hello {username}, welcome to your profile page</p>
 
                 <button onClick={signOut}>sign out</button>
             </div>
