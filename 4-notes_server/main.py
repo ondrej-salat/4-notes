@@ -3,8 +3,6 @@ import jwt
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from google.oauth2 import id_token
-from google.auth.transport import requests
 
 SECRET_KEY = "YOUR_FAST_API_SECRET_KEY"
 ALGORITHM = "HS256"
@@ -36,10 +34,6 @@ class LoginItem(BaseModel):
     password: str
 
 
-class TokenItem(BaseModel):
-    token: str
-
-
 def get_token(req):
     token = req.headers["Authorization"].split()[1]
     return token
@@ -58,8 +52,8 @@ async def root():
 
 
 @app.post("/login")
-async def user_login(loginitem: LoginItem):
-    data = jsonable_encoder(loginitem)
+async def user_login(login_item: LoginItem):
+    data = jsonable_encoder(login_item)
     if data['username'] == test_user['username'] and data['password'] == test_user['password']:
         encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
         return {"token": encoded_jwt}
