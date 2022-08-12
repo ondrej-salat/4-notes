@@ -36,10 +36,6 @@ class LoginItem(BaseModel):
     password: str
 
 
-class TokenItem(BaseModel):
-    token: str
-
-
 def get_token(req):
     token = req.headers["Authorization"].split()[1]
     return token
@@ -58,8 +54,8 @@ async def root():
 
 
 @app.post("/login")
-async def user_login(loginitem: LoginItem):
-    data = jsonable_encoder(loginitem)
+async def user_login(login_item: LoginItem):
+    data = jsonable_encoder(login_item)
     if data['username'] == test_user['username'] and data['password'] == test_user['password']:
         encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
         return {"token": encoded_jwt}
