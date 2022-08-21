@@ -1,3 +1,5 @@
+import json
+
 from fastapi import FastAPI, Request, HTTPException
 import jwt
 import hashlib
@@ -96,9 +98,25 @@ async def user_signup(signup_item: SignupItem):
     return {"message": "Signin failed"}
 
 
-@app.get("/notes")
-async def notes(req: Request):
+@app.get("/note/{file}")
+async def notes(req: Request, file: str):
     token = get_token(req)
     if authorize_token(token):
-        return {"message": f"{jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']}"}
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        if has_ownership(user_name, file):
+            return json.load(open(f'files/{file}.json'))
+    return HTTPException(status_code=401, detail='user is not authorized')
+
+
+@app.get("/all_notes")
+async def all_notes(req: Request):
+    token = get_token(req)
+    if authorize_token(token):
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        user_files = get_users_notes(user_name)
+        list = [{"len": len(user_files)}]
+        for i in range(len(user_files)):
+            list.append(json.load(open(f'files/{user_files[i]}.json')))
+            print(type(json.load(open(f'files/{user_files[i]}.json'))))
+        return json.dumps(list, indent=4)
     return HTTPException(status_code=401, detail='user is not authorized')

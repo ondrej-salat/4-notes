@@ -21,8 +21,8 @@ export default function Login() {
                 .then(async function (response) {
                     console.log(response.data.token, "response.data.token");
                     if (response.data.token) {
-                    setToken(response.data.token);
-                    navigate('/');
+                        setToken(response.data.token);
+                        navigate('/');
                     }
                 })
                 .catch(function (error) {
@@ -37,7 +37,7 @@ export default function Login() {
                 <h1>login page</h1>
                 <div style={{marginTop: 30}}>
                     {fetchToken() ? (
-                       <Navigate to={'/'}/>
+                        <Navigate to={'/'}/>
                     ) : (
                         <div>
                             <form>

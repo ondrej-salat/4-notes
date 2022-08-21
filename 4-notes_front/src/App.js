@@ -6,25 +6,6 @@ import NoPage from "./components/NoPage";
 import Edit from "./components/Edit";
 
 function App() {
-    /* const [message, setMessage] = useState("");
-     const getMessage = async () => {
-         const requestOptions = {
-             method: "GET",
-             headers: {
-                 "Content-Type": "application/json",
-             },
-         };
-         const response = await fetch("/hello/ondrejadfadsfa", requestOptions);
-         const data = await response.json();
-         setMessage(data);
-         console.log(data);
-     };
-
-     useEffect(() => {
-         getMessage()
-     }, []);
-    */
-
 
     return (<div className="App">
         <Routes>
