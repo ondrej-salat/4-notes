@@ -120,3 +120,28 @@ async def all_notes(req: Request):
             print(type(json.load(open(f'files/{user_files[i]}.json'))))
         return json.dumps(list, indent=4)
     return HTTPException(status_code=401, detail='user is not authorized')
+
+
+@app.post("/new/{file_name}")
+async def new_note(req: Request, file_name):
+    subject = str(req.query_params)
+    if not check_subject(subject):
+        subject = 'other'
+    token = get_token(req)
+    if authorize_token(token):
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        create_new_note(file_name, user_name, subject)
+        return json.load(open(f'files/{file_name}.json'))
+    return HTTPException(status_code=401, detail='user is not authorized')
+
+
+@app.delete("/delete/{file_name}")
+async def delete_note(req: Request, file_name):
+    token = get_token(req)
+    if authorize_token(token):
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        if has_ownership(user_name, file_name):
+            remove_note(file_name)
+            return {"message": f"{file_name} was deleted"}
+        return HTTPException(status_code=401, detail='user doesnt own this file')
+    return HTTPException(status_code=401, detail='user is not authorized')

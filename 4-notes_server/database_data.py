@@ -1,5 +1,7 @@
+import os
 from datetime import datetime
 import sqlite3
+import json
 
 
 def user_exists(user_name):
@@ -14,13 +16,13 @@ def user_exists(user_name):
     return True
 
 
-def create_user(user, password, email):
-    if user_exists(user):
+def create_user(user_name, password, email):
+    if user_exists(user_name):
         return False
     con = sqlite3.connect('database.db')
     cur = con.cursor()
     cur.execute(f'INSERT INTO user (user_name, password, email, created) VALUES (?, ?, ?, ?)',
-                (user, password, email, datetime.now().strftime('%d.%m.%Y %H:%M:%S')))
+                (user_name, password, email, datetime.now().strftime('%d.%m.%Y %H:%M:%S')))
     con.commit()
     con.close()
     return True
@@ -80,3 +82,41 @@ def get_users_notes(user_name):
     return list
 
 
+def create_new_note(file_name, user_name, subject):
+    if note_exists(user_name):
+        return False
+    con = sqlite3.connect('database.db')
+    cur = con.cursor()
+    cur.execute(f'INSERT INTO notes (user_name, file_name) VALUES (?, ?)',
+                (user_name, file_name,))
+    file = {
+        "user": f"{user_name}",
+        "subject": f"{subject}",
+        "data": "",
+        "date": f"{datetime.now().strftime('%d.%m.%Y %H:%M:%S')}"
+    }
+    json_object = json.dumps(file, indent=4)
+    with open(f"files/{file_name}.json", "w") as outfile:
+        outfile.write(json_object)
+    con.commit()
+    con.close()
+    return True
+
+
+def check_subject(subject):
+    list = ['m', 'cj', 'aj', 'bi', 'z', 'd', 'zsv', 'fy', 'other']
+    if subject in list:
+        return True
+    return False
+
+
+def remove_note(file_name):
+    if not note_exists(file_name):
+        return False
+    con = sqlite3.connect("database.db")
+    cur = con.cursor()
+    cur.execute('DELETE from notes where file_name = ? ;', (file_name,))
+    con.commit()
+    con.close()
+    os.remove(f"files/{file_name}.json")
+    return True
