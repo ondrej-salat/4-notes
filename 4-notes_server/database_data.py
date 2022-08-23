@@ -90,6 +90,7 @@ def create_new_note(file_name, user_name, subject):
     cur.execute(f'INSERT INTO notes (user_name, file_name) VALUES (?, ?)',
                 (user_name, file_name,))
     file = {
+        "filename": f"file_name",
         "user": f"{user_name}",
         "subject": f"{subject}",
         "data": "",

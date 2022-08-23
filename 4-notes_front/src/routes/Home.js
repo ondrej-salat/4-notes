@@ -34,6 +34,7 @@ export default function Home() {
                 <button onClick={redirectEdit}></button>
                 <button onClick={signOut}>sign out</button>
                 <p>{JSON.stringify(data)}</p>
+                {data.map(product => <p noteName={data['filename']} name={data['username']}></p>)}
             </div>
         </>
     );

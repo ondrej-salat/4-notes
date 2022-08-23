@@ -1,5 +1,3 @@
-import json
-
 from fastapi import FastAPI, Request, HTTPException
 import jwt
 import hashlib
@@ -11,7 +9,6 @@ from database_data import *
 
 SECRET_KEY = "YOUR_FAST_API_SECRET_KEY"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRES_MINUTES = 800
 PEPER = "SOME_PEPER"
 
 app = FastAPI()
@@ -60,8 +57,11 @@ def verify_password(plain_text_password, hashed_password):
 
 
 def get_token(req):
-    token = req.headers["Authorization"].split()[1]
-    return token
+    try:
+        token = req.headers["Authorization"].split()[1]
+        return token
+    except KeyError:
+        return None
 
 
 def authorize_token(token):
@@ -71,9 +71,32 @@ def authorize_token(token):
     return False
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.get("/note/{file}")
+async def notes(req: Request, file: str):
+    token = get_token(req)
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
+    if authorize_token(token):
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        if has_ownership(user_name, file):
+            return json.load(open(f'files/{file}.json'))
+    return HTTPException(status_code=401, detail='user is not authorized')
+
+
+@app.get("/all_notes")
+async def all_notes(req: Request):
+    token = get_token(req)
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
+    if authorize_token(token):
+        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+        user_files = get_users_notes(user_name)
+        list = [{"len": len(user_files)}]
+        for i in range(len(user_files)):
+            list.append(json.load(open(f'files/{user_files[i]}.json')))
+            print(type(json.load(open(f'files/{user_files[i]}.json'))))
+        return json.dumps(list, indent=4)
+    return HTTPException(status_code=401, detail='user is not authorized')
 
 
 @app.post("/login")
@@ -95,39 +118,17 @@ async def user_signup(signup_item: SignupItem):
         payload = {'username': data['username'], 'email': data['email']}
         encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
         return {"token": encoded_jwt}
-    return {"message": "Signin failed"}
-
-
-@app.get("/note/{file}")
-async def notes(req: Request, file: str):
-    token = get_token(req)
-    if authorize_token(token):
-        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
-        if has_ownership(user_name, file):
-            return json.load(open(f'files/{file}.json'))
-    return HTTPException(status_code=401, detail='user is not authorized')
-
-
-@app.get("/all_notes")
-async def all_notes(req: Request):
-    token = get_token(req)
-    if authorize_token(token):
-        user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
-        user_files = get_users_notes(user_name)
-        list = [{"len": len(user_files)}]
-        for i in range(len(user_files)):
-            list.append(json.load(open(f'files/{user_files[i]}.json')))
-            print(type(json.load(open(f'files/{user_files[i]}.json'))))
-        return json.dumps(list, indent=4)
-    return HTTPException(status_code=401, detail='user is not authorized')
+    return {"message": "Signup failed"}
 
 
 @app.post("/new/{file_name}")
 async def new_note(req: Request, file_name):
+    token = get_token(req)
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
     subject = str(req.query_params)
     if not check_subject(subject):
         subject = 'other'
-    token = get_token(req)
     if authorize_token(token):
         user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
         create_new_note(file_name, user_name, subject)
@@ -138,10 +139,12 @@ async def new_note(req: Request, file_name):
 @app.delete("/delete/{file_name}")
 async def delete_note(req: Request, file_name):
     token = get_token(req)
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
     if authorize_token(token):
         user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
         if has_ownership(user_name, file_name):
             remove_note(file_name)
             return {"message": f"{file_name} was deleted"}
-        return HTTPException(status_code=401, detail='user doesnt own this file')
+        return HTTPException(status_code=401, detail='user does not own this file')
     return HTTPException(status_code=401, detail='user is not authorized')
