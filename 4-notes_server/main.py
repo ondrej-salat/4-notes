@@ -38,6 +38,14 @@ class SignupItem(BaseModel):
     email: str
 
 
+class UpdateItem(BaseModel):
+    data: str
+
+
+class NewItem(BaseModel):
+    subject: str
+
+
 def get_salt():
     return secrets.token_hex(8)
 
@@ -94,7 +102,6 @@ async def all_notes(req: Request):
         list = [{"len": len(user_files)}]
         for i in range(len(user_files)):
             list.append(json.load(open(f'files/{user_files[i]}.json')))
-            print(type(json.load(open(f'files/{user_files[i]}.json'))))
         return json.dumps(list, indent=4)
     return HTTPException(status_code=401, detail='user is not authorized')
 
@@ -121,18 +128,37 @@ async def user_signup(signup_item: SignupItem):
     return {"message": "Signup failed"}
 
 
+@app.post('/update/{file_name}')
+async def update_note(req: Request, update_item: UpdateItem, file_name):
+    token = get_token(req)
+    data = jsonable_encoder(update_item)['data']
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
+    if not note_exists(file_name):
+        return HTTPException(status_code=406, detail='file does not exist')
+    if not authorize_token(token):
+        return HTTPException(status_code=401, detail='user is not authorized')
+    user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+    if not has_ownership(user_name, file_name):
+        return HTTPException(status_code=401, detail='user is not authorized')
+    update_note_data(file_name, data)
+    return {"message": "update was successful"}
+
+
 @app.post("/new/{file_name}")
-async def new_note(req: Request, file_name):
+async def new_note(req: Request, file_name, new_item: NewItem):
     token = get_token(req)
     if token is None:
         return HTTPException(status_code=401, detail='no token found')
-    subject = str(req.query_params)
+    subject = jsonable_encoder(new_item)['subject']
     if not check_subject(subject):
         subject = 'other'
+    if len(file_name) >= 30:
+        return HTTPException(status_code=406, detail='filename is longer than 30 chars')
     if authorize_token(token):
         user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
         create_new_note(file_name, user_name, subject)
-        return json.load(open(f'files/{file_name}.json'))
+        return {"filename": f"{file_name}"}
     return HTTPException(status_code=401, detail='user is not authorized')
 
 

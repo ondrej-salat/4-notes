@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+    background-color: aquamarine;
+}
+
+.text {
+    font-size: 14px;
+    resize: none;
+    background-color: white;
+    min-width: 46em;
+    max-width: 46em;
+    min-height: 58em;
+    border-left: 4em solid white;
+    border-right: 4em solid white;
+    border-bottom: 5em solid white;
+    border-top: 5em solid white;
+}

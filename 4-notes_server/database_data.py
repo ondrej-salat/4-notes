@@ -19,6 +19,12 @@ def user_exists(user_name):
 def create_user(user_name, password, email):
     if user_exists(user_name):
         return False
+    if len(user_name) >= 20:
+        return False
+    if len(password) >= 200:
+        return False
+    if len(email) >= 50:
+        return False
     con = sqlite3.connect('database.db')
     cur = con.cursor()
     cur.execute(f'INSERT INTO user (user_name, password, email, created) VALUES (?, ?, ?, ?)',
@@ -90,7 +96,7 @@ def create_new_note(file_name, user_name, subject):
     cur.execute(f'INSERT INTO notes (user_name, file_name) VALUES (?, ?)',
                 (user_name, file_name,))
     file = {
-        "filename": f"file_name",
+        "filename": f"{file_name}",
         "user": f"{user_name}",
         "subject": f"{subject}",
         "data": "",
@@ -121,3 +127,10 @@ def remove_note(file_name):
     con.close()
     os.remove(f"files/{file_name}.json")
     return True
+
+
+def update_note_data(file_name, text):
+    with open(f"files/{file_name}.json") as f:
+        data = json.load(f)
+        data["data"] = text
+        json.dump(data, open(f"files/{file_name}.json", "w"), indent=2)
