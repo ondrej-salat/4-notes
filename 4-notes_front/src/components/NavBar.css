@@ -1,0 +1,99 @@
+.topNav {
+    overflow: hidden;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+
+}
+
+.active_button {
+    border-radius: 4px;
+    float: left;
+    cursor: pointer;
+    display: block;
+    color: #000000;
+    text-align: center;
+    padding: 8px 8px;
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+
+.active {
+    background-color: #ffffff;
+    border-radius: 4px;
+    float: left;
+    cursor: pointer;
+    display: block;
+    color: #000000;
+    text-align: center;
+    padding: 14px 14px;
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.active:hover {
+    text-decoration: underline;
+}
+
+
+#logout {
+    float: right;
+    cursor: pointer;
+    display: block;
+    color: #F7EBE8;
+    text-align: center;
+    padding: 14px 14px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+#logout:hover {
+    text-decoration: underline;
+    /*background-color: #9E9694;
+    color: black;*/
+}
+
+#newNote {
+    cursor: pointer;
+}
+
+#floating-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #ffffff;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    cursor: pointer;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.plus {
+    color: #000000;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 55px;
+    font-size: 38px;
+    font-family: 'Roboto';
+    font-weight: 300;
+    animation: plus-out 0.3s;
+    transition: all 0.3s;
+}
+
+
+.svg {
+    width: 2rem;
+}
+
+

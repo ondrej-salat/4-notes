@@ -3,11 +3,11 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import "./Home.css"
 import {PopUp} from "../components/PopUp";
+import {NavBar} from "../components/NavBar";
 
 export default function Home() {
     const navigate = useNavigate();
     let [notes, setNotes] = useState([]);
-
 
     const redirectEdit = (filename) => {
         navigate(`/edit/${filename}`)
@@ -18,20 +18,12 @@ export default function Home() {
         document.getElementById('filename').value = 'New_file' + Math.round(Math.random() * 10000);
     }
 
-
-    const logOut = () => {
-        localStorage.removeItem("token");
-        navigate("/");
-        console.log('yes sir')
-    };
-
-
     const getItem = async () => {
         axios.get('/all_notes', {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},).then(async function (response) {
             const res = JSON.parse(response['data'])
             let data = []
             for (let i = 1; i <= res[0]['len']; i++) {
-                data.push(res[i])
+                data[res[0]['len'] - i] = res[i]
             }
             setNotes(data)
 
@@ -43,20 +35,24 @@ export default function Home() {
     }, []);
 
     return (<>
-        <div align={'center'} style={{marginTop: 20, minHeight: 700}}>
-            <h1>Home page</h1>
-            <button onClick={divShow}>New note</button>
-            <button onClick={logOut}>log out</button>
-
-            {notes.map((data) => (
-                <div onClick={() => redirectEdit(data['filename'])} key={data['filename']} className={"noteBox"}>
-                    <p> {data['filename']}</p>
-                    <p> {data['subject']}</p>
-                    <p>{data['date']}</p>
+            <NavBar style={'home'}/>
+            <div align={'center'} style={{marginTop: 20, minHeight: 700}}>
+                <h1>Home page</h1>
+                <div className={'grid-container'}>
+                    {notes.map((data) => (
+                        <div onClick={() => redirectEdit(data['filename'])} key={data['filename']}
+                             className={"noteBox"}>
+                            <img className={"subject-logo"} src={`subjects/${data['subject']}.svg`}/>
+                            <h3 className={'file-name'}>{data['filename']}</h3>
+                            <p className={'time'}>{data['date']}</p>
+                        </div>
+                    ))}
                 </div>
-            ))}
-            <PopUp/>
-        </div>
-
-    </>);
+                <div onClick={divShow} id={'floating-button'}>
+                    <p className={"plus"}>+</p>
+                </div>
+                <PopUp style={'home'}/>
+            </div>
+        </>
+    );
 }

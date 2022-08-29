@@ -1,3 +1,86 @@
+.subject-logo {
+    width: 6em;
+    top: 4em;
+    margin-top: 1em;
+}
+
 .noteBox {
-    background-color: red;
+    margin-top: 20px;
+    margin-right: 1.5em;
+    border-style: solid;
+    text-align: center;
+    border-color: #dfdfdf;
+    border-radius: 10px;
+    width: 12em;
+    min-height: 13em;
+    background-color: #96c6c7;
+    cursor: pointer;
+    position: relative;
+}
+
+.noteBox:hover {
+    background-color: #88b3b3;
+}
+
+.file-name {
+    color: #000000;
+    top: 50%;
+    margin-top: 1em;
+    left: 6em;
+
+}
+
+.time {
+    color: #3a3a3a;
+    font-size: 0.8em;
+    bottom: 1em;
+    margin-bottom: 1em;
+    right: 1.25em;
+}
+
+@media screen and (min-width: 0px) {
+    .grid-container {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        grid-template-columns: auto;
+    }
+}
+
+@media screen and (min-width: 300px) {
+    .grid-container {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        grid-template-columns: auto auto;
+    }
+}
+
+
+@media screen and (min-width: 700px) and (max-width: 1000px) {
+    .grid-container {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        grid-template-columns: auto auto auto;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .grid-container {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        grid-template-columns: auto auto auto auto;
+    }
+}
+
+
+@media screen and (min-width: 1400px) {
+    .grid-container {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        grid-template-columns: auto auto auto auto auto;
+    }
 }
