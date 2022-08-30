@@ -169,6 +169,6 @@ async def delete_note(req: Request, file_name):
         user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
         if has_ownership(user_name, file_name):
             remove_note(file_name)
-            return {"message": f"{file_name} was deleted"}
+            return {"message": 'ok'}
         return HTTPException(status_code=401, detail='user does not own this file')
     return HTTPException(status_code=401, detail='user is not authorized')

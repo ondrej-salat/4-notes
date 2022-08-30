@@ -20,7 +20,6 @@ export default function Edit() {
             [{'header': [1, 2, false]}],
             ['bold', 'italic', 'strike', 'blockquote'],
             [{'list': 'ordered'}, {'list': 'bullet'}],
-            //[{ 'color': [] }, { 'background': [] }],
             ['link', 'image'],
             ['clean']
         ],
@@ -43,11 +42,12 @@ export default function Edit() {
 
     const getItems = async () => {
         axios.get(`/note/${location}`, {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},).then(async function (response) {
-            if (response['data'] != undefined) {
+            if (response['data'] !== undefined) {
                 setData(response['data'])
                 setValue(response['data']['data'])
             } else {
                 navigate('/')
+                alert('ERROR file was not found')
             }
 
         })

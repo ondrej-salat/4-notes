@@ -22,7 +22,10 @@ export default function Login() {
                     if (response.data.token) {
                         setToken(response.data.token);
                         navigate('/');
+                    }else {
+                        alert('Login failed')
                     }
+
                 })
                 .catch(function (error) {
                     console.log(error, "error");
@@ -42,7 +45,10 @@ export default function Login() {
                     if (response.data.token) {
                         setToken(response.data.token);
                         navigate('/');
+                    }else{
+                        alert('SignUp failed')
                     }
+
                 })
                 .catch(function (error) {
                     console.log(error, "error");

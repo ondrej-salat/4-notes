@@ -35,14 +35,26 @@ export function PopUp(props) {
         console.log(document.getElementById('subject').value)
         axios.post(`/new/${document.getElementById('filename').value}`, {subject: document.getElementById('subject').value}, {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},)
             .then(async function (response) {
-                navigate(`/edit/${response['data']['filename']}`)
+                if (response['data']['filename'] === undefined) {
+                    divHide()
+                    alert('ERROR file was not created')
+                } else {
+                    navigate(`/edit/${response['data']['filename']}`)
+                }
+
             })
     }
 
     const remove = () => {
         axios.delete(`/delete/${data['filename']}`, {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},)
             .then(async function (response) {
-                navigate(`/`)
+                if (response['data']['message'] === 'ok') {
+                    navigate(`/`)
+                    alert('file deleted successfully')
+                } else {
+                    alert('ERROR file was not deleted')
+                }
+
             })
     }
 
@@ -52,9 +64,9 @@ export function PopUp(props) {
                 <div id={'popupContent'}>
                     <h2>Create new note</h2>
                     <label htmlFor={'filename'}>Filename</label>
-                    <input maxLength={30} required={true} id={'filename'}/><br/>
+                    <input className={'filename'} maxLength={30} required={true} id={'filename'}/>
                     <label htmlFor={'subject'}>Subject</label>
-                    <select required={true} id={'subject'}>
+                    <select className={'select'} required={true} id={'subject'}>
                         <option value={'other'}>Other</option>
                         <option value={'cj'}>CJ</option>
                         <option value={'m'}>M</option>
@@ -64,9 +76,9 @@ export function PopUp(props) {
                         <option value={'fy'}>FY</option>
                         <option value={'d'}>D</option>
                         <option value={'zsv'}>ZSV</option>
-                    </select><br/>
-                    <button onClick={divHide}>Cancel</button>
-                    <button onClick={newFile}>Create</button>
+                    </select>
+                    <button className={'cancel'} onClick={divHide}>Cancel</button>
+                    <button className={'confirm'} onClick={newFile}>Create</button>
                 </div>
             </div>
         );
@@ -74,9 +86,9 @@ export function PopUp(props) {
         return (
             <div align={'center'} id={'popup'}>
                 <div id={'popupContent'}>
-                    <h2>Permanently delete?</h2>
-                    <button onClick={remove}>Yes</button>
-                    <button onClick={divHide}>Cancel</button>
+                    <h2 className={'title'}>Permanently delete?</h2>
+                    <button className={'cancel'} onClick={divHide}>Cancel</button>
+                    <button className={'delete'} onClick={remove}>Delete</button>
                 </div>
             </div>
         )
@@ -86,9 +98,10 @@ export function PopUp(props) {
                 <div id={'popupContent2'}>
                     <h2>Edit file</h2>
                     <label htmlFor={'filename2'}>Filename</label>
-                    <input defaultValue={data['filename']} maxLength={30} required={true} id={'filename2'}/><br/>
+                    <input className={'filename'} defaultValue={data['filename']} maxLength={30} required={true}
+                           id={'filename2'}/>
                     <label htmlFor={'subject2'}>Subject</label>
-                    <select defaultValue={data['subject']} required={true} id={'subject2'}>
+                    <select className={'select'} defaultValue={data['subject']} required={true} id={'subject2'}>
                         <option value={'other'}>Other</option>
                         <option value={'cj'}>CJ</option>
                         <option value={'m'}>M</option>
@@ -98,9 +111,9 @@ export function PopUp(props) {
                         <option value={'fy'}>FY</option>
                         <option value={'d'}>D</option>
                         <option value={'zsv'}>ZSV</option>
-                    </select><br/>
-                    <button onClick={divHide2}>Cancel</button>
-                    <button onClick={rename}>Create</button>
+                    </select>
+                    <button className={'cancel'} onClick={divHide2}>Cancel</button>
+                    <button className={'confirm'} onClick={rename}>Edit</button>
                 </div>
             </div>
         )
