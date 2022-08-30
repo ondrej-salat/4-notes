@@ -134,3 +134,26 @@ def update_note_data(file_name, text):
         data = json.load(f)
         data["data"] = text
         json.dump(data, open(f"files/{file_name}.json", "w"), indent=2)
+
+
+def rename_file(file_name, new_name, subject):
+    if new_name == file_name:
+        with open(f"files/{file_name}.json") as f:
+            data = json.load(f)
+            data["filename"] = new_name
+            data['subject'] = subject
+            json.dump(data, open(f"files/{new_name}.json", "w"), indent=2)
+        return True
+    if note_exists(new_name):
+        return False
+    con = sqlite3.connect("database.db")
+    cur = con.cursor()
+    cur.execute('UPDATE notes SET file_name = ? where file_name = ?;', (new_name, file_name,))
+    con.commit()
+    con.close()
+    with open(f"files/{file_name}.json") as f:
+        data = json.load(f)
+        data["filename"] = new_name
+        data['subject'] = subject
+        json.dump(data, open(f"files/{new_name}.json", "w"), indent=2)
+    return True

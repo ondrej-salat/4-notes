@@ -37,7 +37,7 @@ export default function Home() {
     return (<>
             <NavBar style={'home'}/>
             <div align={'center'} style={{marginTop: 20, minHeight: 700}}>
-                <h1>Home page</h1>
+                <h2 className={'title'}>Your notes</h2>
                 <div className={'grid-container'}>
                     {notes.map((data) => (
                         <div onClick={() => redirectEdit(data['filename'])} key={data['filename']}

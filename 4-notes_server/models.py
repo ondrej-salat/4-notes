@@ -18,3 +18,8 @@ class UpdateItem(BaseModel):
 
 class NewItem(BaseModel):
     subject: str
+
+
+class NewName(BaseModel):
+    filename: str
+    subject: str

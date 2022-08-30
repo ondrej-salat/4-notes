@@ -61,19 +61,19 @@ def authorize_token(token):
     return False
 
 
-@app.get("/note/{file}")
-async def notes(req: Request, file: str):
+@app.get('/note/{file_name}')
+async def notes(req: Request, file_name: str):
     token = get_token(req)
     if token is None:
         return HTTPException(status_code=401, detail='no token found')
     if authorize_token(token):
         user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
-        if has_ownership(user_name, file):
-            return json.load(open(f'files/{file}.json'))
+        if has_ownership(user_name, file_name):
+            return json.load(open(f'files/{file_name}.json'))
     return HTTPException(status_code=401, detail='user is not authorized')
 
 
-@app.get("/all_notes")
+@app.get('/all_notes')
 async def all_notes(req: Request):
     token = get_token(req)
     if token is None:
@@ -88,7 +88,7 @@ async def all_notes(req: Request):
     return HTTPException(status_code=401, detail='user is not authorized')
 
 
-@app.post("/login")
+@app.post('/login')
 async def user_login(login_item: LoginItem):
     data = jsonable_encoder(login_item)
     if user_exists(data['username']):
@@ -127,7 +127,7 @@ async def update_note(req: Request, update_item: UpdateItem, file_name):
     return {"message": "update was successful"}
 
 
-@app.post("/new/{file_name}")
+@app.post('/new/{file_name}')
 async def new_note(req: Request, file_name, new_item: NewItem):
     token = get_token(req)
     if token is None:
@@ -144,7 +144,23 @@ async def new_note(req: Request, file_name, new_item: NewItem):
     return HTTPException(status_code=401, detail='user is not authorized')
 
 
-@app.delete("/delete/{file_name}")
+@app.post('/rename/{file_name}')
+async def rename_note(req: Request, file_name, new_name: NewName):
+    token = get_token(req)
+    if token is None:
+        return HTTPException(status_code=401, detail='no token found')
+    if not authorize_token(token):
+        return HTTPException(status_code=401, detail='user is not authorized')
+    new_name = jsonable_encoder(new_name)
+    user_name = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['username']
+    if not has_ownership(user_name, file_name):
+        return HTTPException(status_code=401, detail='user does not own this file')
+    if rename_file(file_name, new_name['filename'], new_name['subject']):
+        return {"new_name": f"{new_name['filename']}"}
+    return HTTPException(status_code=401, detail='rename failed')
+
+
+@app.delete('/delete/{file_name}')
 async def delete_note(req: Request, file_name):
     token = get_token(req)
     if token is None:

@@ -43,8 +43,13 @@ export default function Edit() {
 
     const getItems = async () => {
         axios.get(`/note/${location}`, {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},).then(async function (response) {
-            setData(response['data'])
-            setValue(response['data']['data'])
+            if (response['data'] != undefined) {
+                setData(response['data'])
+                setValue(response['data']['data'])
+            } else {
+                navigate('/')
+            }
+
         })
     }
 
@@ -61,7 +66,10 @@ export default function Edit() {
                 <ReactQuill onKeyDown={(e) => update(e['key'])} id={'text'} className={'text'} theme="bubble"
                             value={value} onChange={setValue} modules={modules}
                             formats={formats}/><br/>
+
             </div>
             <PopUp style={'edit'} data={data}/>
+            <PopUp style={'rename'} data={data}/>
+
         </>);
 }

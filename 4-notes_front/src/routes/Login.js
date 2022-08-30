@@ -2,24 +2,23 @@ import React, {useState} from "react";
 import {useNavigate, Navigate} from "react-router-dom";
 import {fetchToken, setToken} from "./Auth";
 import axios from "axios";
+import './Login.css'
 
 export default function Login() {
     const navigate = useNavigate()
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("")
 
-    //check to see if the fields are not empty
-    const login = () => {
+    const login = async () => {
         if ((username === "") || (password === "")) {
             return;
         } else {
             axios
-                .post("http://localhost:8000/login", {
-                    username: username,
-                    password: password,
+                .post("/login", {
+                    username: username, password: password,
                 })
                 .then(async function (response) {
-                    console.log(response.data.token, "response.data.token");
                     if (response.data.token) {
                         setToken(response.data.token);
                         navigate('/');
@@ -31,34 +30,64 @@ export default function Login() {
         }
     };
 
-    return (
-        <>
-            <div style={{minHeight: 800, marginTop: 30}}>
-                <h1>login page</h1>
-                <div style={{marginTop: 30}}>
-                    {fetchToken() ? (
-                        <Navigate to={'/'}/>
-                    ) : (
-                        <div>
-                            <form>
-                                <label style={{marginRight: 10}}>Input Username</label>
-                                <input
-                                    type="text"
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
+    const signup = async () => {
+        if ((username === "") || (password === "") || (email === "")) {
+            return;
+        } else {
+            axios
+                .post("/signup", {
+                    username: username, email: email, password: password,
+                })
+                .then(async function (response) {
+                    if (response.data.token) {
+                        setToken(response.data.token);
+                        navigate('/');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error, "error");
+                });
+        }
+    };
 
-                                <label style={{marginRight: 10}}>Input Password</label>
-                                <input
-                                    type="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
+    if (fetchToken() == null) {
+        return (
+            <>
+                <div className={'body'}>
+                    <div className={"main"}>
+                        <input type={"checkbox"} id={"chk"} aria-hidden={"true"}/>
+                        <div className={"login"}>
 
-                                <button onClick={login}>Login</button>
-                            </form>
+                            <label className={'label'} htmlFor={"chk"} aria-hidden={"true"}>Login</label>
+                            <input className={'input'} type={"text"}
+                                   onChange={(e) => setUsername(e.target.value)}
+                                   placeholder={"Username"} required={true}/>
+                            <input className={'input'} type={"password"}
+                                   onChange={(e) => setPassword(e.target.value)}
+                                   placeholder={"Password"} required={true}/>
+                            <button className={'button'} onClick={login}>Login</button>
+
                         </div>
-                    )}
+                        <div className={"signup"}>
+
+                            <label className={'label'} htmlFor={"chk"} aria-hidden={"true"}>Sign up</label>
+                            <input className={'input'} onChange={(e) => setUsername(e.target.value)}
+                                   type={"text"} placeholder={"Username"} required={true}/>
+                            <input className={'input'} onChange={(e) => setEmail(e.target.value)}
+                                   type={"email"} placeholder={"Email"} required={true}/>
+                            <input className={'input'} onChange={(e) => setPassword(e.target.value)}
+                                   type={"password"} placeholder={"Password"} required={true}/>
+                            <button onClick={signup} className={'button2'}>Sign up</button>
+
+                        </div>
+
+
+                    </div>
                 </div>
-            </div>
-        </>
-    );
+
+            </>)
+    } else {
+        return <Navigate to={'/'}/>
+    }
 }
+

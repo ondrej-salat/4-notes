@@ -19,6 +19,10 @@ export function NavBar(props) {
             })
     }
 
+    const showRename = () => {
+        document.getElementById('popup2').style.display = "block";
+    }
+
     const showRemove = () => {
         document.getElementById('popup').style.display = "block";
     }
@@ -56,7 +60,7 @@ export function NavBar(props) {
                     <a onClick={printDiv} className={'active_button'}>
                         <img className={'svg'} src={'/print.svg'}/>
                     </a>
-                    <a className={'active_button'}>
+                    <a onClick={showRename} className={'active_button'}>
                         <img className={'svg'} src={'/pencil.svg'}/>
                     </a>
                     <a onClick={showRemove} className={'active_button'}>
