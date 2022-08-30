@@ -2,10 +2,11 @@ from fastapi import FastAPI, Request, HTTPException
 import jwt
 import hashlib
 import secrets
-from pydantic import BaseModel
+
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from database_data import *
+from manage_data import *
+from models import *
 
 SECRET_KEY = "YOUR_FAST_API_SECRET_KEY"
 ALGORITHM = "HS256"
@@ -25,25 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-
-class LoginItem(BaseModel):
-    username: str
-    password: str
-
-
-class SignupItem(BaseModel):
-    username: str
-    password: str
-    email: str
-
-
-class UpdateItem(BaseModel):
-    data: str
-
-
-class NewItem(BaseModel):
-    subject: str
 
 
 def get_salt():

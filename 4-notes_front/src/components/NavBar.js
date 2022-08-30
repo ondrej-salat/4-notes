@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 export function NavBar(props) {
     const navigate = useNavigate();
+    const data = props.data;
 
 
     const logOut = () => {
@@ -11,6 +12,12 @@ export function NavBar(props) {
         navigate("/");
     };
 
+    const update = async () => {
+        axios.post(`/update/${data['filename']}`, {data: document.getElementsByClassName('ql-editor')[0].innerHTML}, {headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}},)
+            .then(async function (response) {
+                navigate('/')
+            })
+    }
 
     const showRemove = () => {
         document.getElementById('popup').style.display = "block";
@@ -43,8 +50,8 @@ export function NavBar(props) {
         return (
             <div align={'center'}>
                 <div className={"topNav"}>
-                    <a className={"active"} href="/">
-                        4NOTES {props.color}
+                    <a className={"active"} onClick={update}>
+                        4NOTES
                     </a>
                     <a onClick={printDiv} className={'active_button'}>
                         <img className={'svg'} src={'/print.svg'}/>

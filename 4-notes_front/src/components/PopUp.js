@@ -31,8 +31,9 @@ export function PopUp(props) {
             <div id={'popup'}>
                 <div id={'popupContent'}>
                     <h2>Create new note</h2>
-                    <input maxLength={30} required={true} id={'filename'}/>
-                    <h2>Select subject</h2>
+                    <label for={'filename'}>Filename</label>
+                    <input maxLength={30} required={true} id={'filename'}/><br/>
+                    <label for={'subject'}>Subject</label>
                     <select required={true} id={'subject'}>
                         <option value={'other'}>Other</option>
                         <option value={'cj'}>CJ</option>
@@ -43,7 +44,7 @@ export function PopUp(props) {
                         <option value={'fy'}>FY</option>
                         <option value={'d'}>D</option>
                         <option value={'zsv'}>ZSV</option>
-                    </select>
+                    </select><br/>
                     <button onClick={divHide}>Cancel</button>
                     <button onClick={newFile}>Create</button>
                 </div>

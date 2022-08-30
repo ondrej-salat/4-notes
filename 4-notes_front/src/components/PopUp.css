@@ -12,7 +12,11 @@
 }
 
 #popupContent {
-    background-color: blueviolet;
+    color: white;
+    background-color: #0e0f18;
+    border-style: solid;
+    border-radius: 8px;
+    border-color: white;
     position: absolute;
     opacity: 1;
     top: 30%;
